@@ -1,0 +1,3 @@
+test:
+    tests: /home/opnfv/repos/odl_test/csit/suites/natapp/basic
+    container-image-name: opnfv/cperf:latest

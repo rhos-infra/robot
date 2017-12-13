@@ -1,0 +1,11 @@
+*.pyc
+.venv
+*.egg-info
+.idea/
+/docs/build/
+.cache/
+/ansible.cfg
+.tox_*
+.tox/
+.plugins.ini
+*.retry
