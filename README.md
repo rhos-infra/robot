@@ -30,4 +30,5 @@ Run:
     
     example:
     
-        infrared robot --tests /home/opnfv/repos/odl_test/csit/suites/natapp/basic
+        infrared robot --tests /home/opnfv/repos/odl_test/csit/suites/natapp/basic,
+        /home/opnfv/repos/odl_test/csit/suites/openstack/connectivity/l2.robot
