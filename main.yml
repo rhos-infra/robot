@@ -1,8 +1,19 @@
+- name: Gather controller facts
+  hosts: controller:compute
+  gather_facts: yes
+  any_errors_fatal: true
+
 - name: Prepare and run Robot tests
   hosts: tester
   gather_facts: yes
   any_errors_fatal: true
   tasks:
+
+      - name: Enable internal_api on tester
+        become: true
+        shell: |
+            ip link add link eth1 name eth1.20 type vlan id 20
+            ifconfig eth1.20 172.17.1.150/24
 
       - name: set workdir fact
         set_fact:
@@ -153,13 +164,11 @@
                           -v HA_PROXY_1_IP:$ODL_IP \
                           -v HA_PROXY_2_IP:$ODL_IP \
                           -v HA_PROXY_3_IP:$ODL_IP \
-                          -v NUM_ODL_SYSTEM:1 \
+                          -v NUM_ODL_SYSTEM:{{ groups['controller'] | length }} \
                           -v NUM_OS_SYSTEM:3 \
                           -v NUM_TOOLS_SYSTEM:0 \
                           -v ODL_SNAT_MODE:controller \
                           -v ODL_STREAM:carbon \
-                          -v ODL_SYSTEM_IP:$ODL_IP \
-                          -v ODL_SYSTEM_1_IP:$ODL_IP \
                           -v OS_CONTROL_NODE_IP:$ODL_IP \
                           -v OS_CONTROL_NODE_1_IP:$OPENSTACK_CONTROL_NODE_1_IP \
                           -v OS_CONTROL_NODE_2_IP:$OPENSTACK_CONTROL_NODE_2_IP \
@@ -167,6 +176,10 @@
                           -v OPENSTACK_BRANCH:stable/pike \
                           -v OS_COMPUTE_1_IP:$OPENSTACK_COMPUTE_NODE_1_IP \
                           -v OS_COMPUTE_2_IP:$OPENSTACK_COMPUTE_NODE_2_IP \
+                          -v ODL_SYSTEM_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
+                          -v ODL_SYSTEM_1_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
+                          -v ODL_SYSTEM_2_IP:{{ hostvars['controller-1']['facter_ipaddress_vlan20'] }} \
+                          -v ODL_SYSTEM_3_IP:{{ hostvars['controller-2']['facter_ipaddress_vlan20'] }} \
                           -v OS_USER:heat-admin \
                           -v ODL_SYSTEM_USER:heat-admin \
                           -v ODL_SYSTEM_PROMPT:\$ \
@@ -177,6 +190,11 @@
                           -v WORKSPACE:{{ workdir }}/workspace  \
                           -v USER:heat-admin \
                           -v TOOLS_SYSTEM_IP:localhost \
+                          -v NODE_KARAF_COUNT_COMMAND:\"sudo docker exec opendaylight_api /bin/bash -c 'ps axf | grep org.apache.karaf | grep -v grep | wc -l' || echo 0\" \
+                          -v NODE_START_COMMAND:\"sudo docker start opendaylight_api\" \
+                          -v NODE_KILL_COMMAND:\"sudo docker stop opendaylight_api\" \
+                          -v NODE_STOP_COMMAND:\"sudo docker stop opendaylight_api\" \
+                          -v NODE_FREEZE_COMMAND:\"sudo docker stop opendaylight_api\" \
                           -v of_port:6653 "
 
             docker run -i --net=host -v {{ workdir }}:{{ workdir }}:Z \
