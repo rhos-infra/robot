@@ -14,12 +14,10 @@ subparsers:
                         Example:
                             /home/opnfv/repos/odl_test/csit/suites/natapp/basic,/home/opnfv/repos/odl_test/csit/suites/openstack/connectivity/l2.robot
                       required: yes
-            - title: Robot docker containers
+            - title: Robot docker container name
               options:
                   container-image-name:
                       type: Value
                       help: |
                           Name of the container image to use to run Robot in.
                       default: opnfv/cperf:latest
-
-
