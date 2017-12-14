@@ -7,7 +7,7 @@ subparsers:
         groups:
             - title: Robot tests
               options:
-                  tests:
+                  testss:
                       type: Value
                       help: |
                         Comma,delimited list of robot files to execute.
