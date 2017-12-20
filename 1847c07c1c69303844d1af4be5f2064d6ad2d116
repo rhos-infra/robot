@@ -65,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "4b6a9b2f_354d6d6c",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1008569
+      },
+      "writtenOn": "2017-12-20T11:18:52Z",
+      "side": 1,
+      "message": "Would also be better to use {{  | default() }}  for the previous 3 lines, or {%- if hostvars[\u0027controller-x\u0027][\u0027facter_ipaddress_vlan20\u0027] is defined %}... so that it won\u0027t fail with only one controller present",
+      "parentUuid": "7359f638_11f39307",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 104
+      },
+      "revId": "1847c07c1c69303844d1af4be5f2064d6ad2d116",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bda319c_d9821faf",
         "filename": "main.yml",
         "patchSetId": 1
