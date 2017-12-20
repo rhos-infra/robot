@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "091de553_09694427",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1008569
+      },
+      "writtenOn": "2017-12-20T09:47:56Z",
+      "side": 1,
+      "message": "This can vary, would be better to use:                   \n-v NUM_ODL_SYSTEM:{{ groups[\u0027controller\u0027] | length }} \\",
+      "revId": "1847c07c1c69303844d1af4be5f2064d6ad2d116",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7359f638_11f39307",
         "filename": "main.yml",
         "patchSetId": 1
