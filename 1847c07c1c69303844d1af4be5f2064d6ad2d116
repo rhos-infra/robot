@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2160d3b7_c33a33aa",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2017-12-20T09:35:12Z",
+      "side": 1,
+      "message": "This should be generic enough - there should be a way either to discover the interface,VLAN IP address etc or have it in variables that can be modified.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 47
+      },
+      "revId": "1847c07c1c69303844d1af4be5f2064d6ad2d116",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7359f638_11f39307",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2017-12-20T09:35:12Z",
+      "side": 1,
+      "message": "What if we have non-HA setup? It also applies to other variables as well.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 104
+      },
+      "revId": "1847c07c1c69303844d1af4be5f2064d6ad2d116",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bda319c_d9821faf",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2017-12-20T09:35:12Z",
+      "side": 1,
+      "message": "I think this is also needs to be in variables because we probably have different commands that we\u0027ll want to use. For example, Using IPMI to stop the node instead of the container.",
+      "range": {
+        "startLine": 196,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 88
+      },
+      "revId": "1847c07c1c69303844d1af4be5f2064d6ad2d116",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
