@@ -10,16 +10,22 @@ subparsers:
                   tests:
                       type: Value
                       help: |
-                        Comma,delimited list of robot files to execute.
-                        Example:
-                            /home/opnfv/repos/odl_test/csit/suites/natapp/basic,/home/opnfv/repos/odl_test/csit/suites/openstack/connectivity/l2.robot
+                          Comma,delimited list of robot files to execute.
+                          Example:
+                              --tests /home/opnfv/repos/odl_test/csit/suites/natapp/basic,/home/opnfv/repos/odl_test/csit/suites/openstack/connectivity/l2.robot
                       required: yes
-            - title: Robot docker containers
+            - title: Robot docker container name
               options:
                   container-image-name:
                       type: Value
                       help: |
                           Name of the container image to use to run Robot in.
                       default: opnfv/cperf:latest
-
-
+            - title: Deployment environment
+              options:
+                  deployment-environment:
+                      type: Value
+                      help: |
+                          Type of environment OpenDaylight was deployed in: baremetal, VM
+                      default: VM
+                      required: yes
