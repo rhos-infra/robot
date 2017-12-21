@@ -1,3 +1,7 @@
 test:
     tests: /home/opnfv/repos/odl_test/csit/suites/natapp/basic
     container-image-name: opnfv/cperf:latest
+    deployment-environment:
+        - vm:
+            node_karaf_count_command: sudo docker exec opendaylight_api /bin/bash -c 'ps axf | grep org.apache.karaf | grep -v grep | wc -l' || echo 0
+        - baremetal:
