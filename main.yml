@@ -1,8 +1,130 @@
+- name: Gather controller facts
+  hosts: controller
+  gather_facts: yes
+  any_errors_fatal: true
+  tasks:
+      - name: Allow karaf port on controllers
+        iptables:
+            chain: INPUT
+            destination_port: 8081
+            protocol: tcp
+            jump: ACCEPT
+        become: true
+      - name: save iptables
+        command: iptables-save
+        become: true
+
+
 - name: Prepare and run Robot tests
   hosts: tester
   gather_facts: yes
   any_errors_fatal: true
   tasks:
+
+      # TODO: remove once opendaylight jobs don't leave any residue (i.e.: routers) after running tempest tests
+      - name: list overcloud resources - see whether there still are any leftovers
+        shell: |
+            . {{ ansible_user_dir }}/overcloudrc
+            openstack server list --all-projects
+            openstack network list
+            openstack subnet list
+            openstack floating ip list
+            openstack port list
+            openstack router list
+            openstack stack list
+            openstack keypair list
+            openstack security group list
+
+      - name: install required RPMs
+        package:
+            name: "{{ item }}"
+            state: present
+        become: yes
+        with_items:
+            - python-virtualenv
+            - gcc
+        tags: overcloud-cleanup
+
+      - name: setup shade_janitor to purge openstack resources possibly left after tempest run
+        git:
+            accept_hostkey: yes
+            version: master
+            repo: https://github.com/yazug/shade_janitor
+            dest: shade_janitor
+        tags: overcloud-cleanup
+
+      - name: Create robot virtualenv with latest pip, setuptools
+        pip:
+            virtualenv: "/tmp/robot-venv"
+            name: "{{ item }}"
+            state: present
+        with_items:
+            - setuptools
+            - pip
+        tags: overcloud-cleanup
+
+      - name: install shade_janitor
+        shell: |
+            set -xe
+            . /tmp/robot-venv/bin/activate
+            cd shade_janitor
+                pip install -U pip
+                pip install -r requirements.txt >> pip_install_requirements.txt
+                pip list > pip_list.txt
+        tags: overcloud-cleanup
+
+      - name: run shade_janitor to cleanup overcloud
+        shell: |
+            set -x
+            . {{ ansible_user_dir }}/overcloudrc
+
+            openstack project list
+            export TEMPEST_PROJECT_IDS="$(openstack project list --column ID --column Name | awk -F'|' '$0 ~ /tempest/ {print $2}')"
+            for _id in $TEMPEST_PROJECT_IDS; do
+               openstack project purge --project $_id
+            done
+
+            # the very hardcore way but for the moment neither shade_janitor, nor openstack project purge can't do clean this mess properly
+            # will do it this way till we can use CSIT's built int Openstack cleanup
+            for port_id in $(openstack port list -f value | awk '{print $1}') ; do openstack port delete $port_id; done
+            for fip_id in $(openstack floating ip list -f value | awk '{print $1}') ; do openstack floating ip delete $port_id; done
+            for subnet_id in $(openstack subnet list -f value | awk '{print $1}') ; do openstack subnet delete $subnet_id; done
+            for net_id in $(openstack network list -f value | awk '{print $1}') ; do openstack network delete $net_id; done
+            for router_id in $(openstack router list -f value | awk '{print $1}') ; do openstack router delete $router_id; done
+
+            SHADE_JANITOR_OPTS="--cleanup"
+
+            . /tmp/robot-venv/bin/activate
+            cd shade_janitor
+            python shade_janitor/janitor.py $SHADE_JANITOR_OPTS --floatingips >> overcloud_cleanup.log
+            sleep 10
+            python shade_janitor/janitor.py $SHADE_JANITOR_OPTS >> overcloud_cleanup.log
+        register: overcloud_cleanup
+        until: overcloud_cleanup.rc == 0
+        retries: 5
+        delay: 5
+        ignore_errors: true
+        tags: overcloud-cleanup
+
+      - name: list overcloud resources
+        shell: |
+            . {{ ansible_user_dir }}/overcloudrc
+            openstack server list --all-projects
+            openstack network list
+            openstack subnet list
+            openstack floating ip list
+            openstack port list
+            openstack router list
+            openstack stack list
+            openstack keypair list
+            openstack security group list
+
+      - name: Enable internal_api on tester
+        become: true
+        shell: |
+            ip link add link eth1 name eth1.20 type vlan id 20
+            ifconfig eth1.20 172.17.1.150/24 up
+        tags: ha
 
       - name: set workdir fact
         set_fact:
@@ -133,6 +255,8 @@
                 -o UserKnownHostsFile=/dev/null -o LogLevel=error \
                 heat-admin@$OPENSTACK_CONTROL_NODE_1_IP "sudo yum install -y openstack-tempest"
 
+#      - name: prepare commands depending on deployment environment
+
       - name: run Robot
         shell: |
             set -x
@@ -153,7 +277,7 @@
                           -v HA_PROXY_1_IP:$ODL_IP \
                           -v HA_PROXY_2_IP:$ODL_IP \
                           -v HA_PROXY_3_IP:$ODL_IP \
-                          -v NUM_ODL_SYSTEM:1 \
+                          -v NUM_ODL_SYSTEM:{{ groups['controller'] | length }} \
                           -v NUM_OS_SYSTEM:3 \
                           -v NUM_TOOLS_SYSTEM:0 \
                           -v ODL_SNAT_MODE:controller \
@@ -167,6 +291,14 @@
                           -v OPENSTACK_BRANCH:stable/pike \
                           -v OS_COMPUTE_1_IP:$OPENSTACK_COMPUTE_NODE_1_IP \
                           -v OS_COMPUTE_2_IP:$OPENSTACK_COMPUTE_NODE_2_IP \
+                          -v ODL_SYSTEM_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
+                          -v ODL_SYSTEM_1_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
+                          {%- if hostvars['controller-1'] is defined %}
+                          -v ODL_SYSTEM_2_IP:{{ hostvars['controller-1']['facter_ipaddress_vlan20'] | default('') }} \
+                          {% endif %}
+                          {%- if hostvars['controller-2'] is defined %}
+                          -v ODL_SYSTEM_3_IP:{{ hostvars['controller-2']['facter_ipaddress_vlan20'] | default('') }} \
+                          {% endif %}
                           -v OS_USER:heat-admin \
                           -v ODL_ENABLE_L3_FWD:yes \
                           -v ODL_SYSTEM_USER:heat-admin \
@@ -181,6 +313,12 @@
                           -v WORKSPACE:{{ workdir }}/workspace  \
                           -v USER:heat-admin \
                           -v TOOLS_SYSTEM_IP:localhost \
+                          -v NODE_KARAF_COUNT_COMMAND:\"sudo docker exec opendaylight_api /bin/bash -c 'ps axf | grep org.apache.karaf | grep -v grep | wc -l' || echo 0\" \
+                          -v NODE_START_COMMAND:\"sudo docker start opendaylight_api\" \
+                          -v NODE_KILL_COMMAND:\"sudo docker stop opendaylight_api\" \
+                          -v NODE_STOP_COMMAND:\"sudo docker stop opendaylight_api\" \
+                          -v NODE_FREEZE_COMMAND:\"sudo docker stop opendaylight_api\" \
+                          -v NODE_ROLE_INDEX_START:0 \
                           -v of_port:6653 "
 
             docker run -i --net=host -v {{ workdir }}:{{ workdir }}:Z \
