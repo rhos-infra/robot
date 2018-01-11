@@ -170,6 +170,7 @@
                           -v OS_USER:heat-admin \
                           -v ODL_SYSTEM_USER:heat-admin \
                           -v ODL_SYSTEM_PROMPT:\$ \
+                          -v PRE_CLEAN_OPENSTACK_ALL:True \
                           -v PUBLIC_PHYSICAL_NETWORK:datacentre \
                           -v RESTCONFPORT:8081 \
                           -v SECURITY_GROUP_MODE:stateful \
