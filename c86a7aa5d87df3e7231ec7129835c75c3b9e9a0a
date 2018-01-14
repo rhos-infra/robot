@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74fbdc70_12cb3d80",
+        "filename": "main.yml",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2018-01-14T06:58:27Z",
+      "side": 1,
+      "message": "Can we use the pip module?",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 13
+      },
+      "revId": "c86a7aa5d87df3e7231ec7129835c75c3b9e9a0a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1ec2543_413008dc",
+        "filename": "main.yml",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2018-01-14T06:58:27Z",
+      "side": 1,
+      "message": "1. You need to remove the interfaces of the router first.\n2. If you delete the networks you don\u0027t need to delete the subnets.\n3. If we are doing it this way - why do we install/use janitor ?\n4. Maybe put the script somewhere and run it instead of putting the code here.",
+      "range": {
+        "startLine": 66,
+        "startChar": 2,
+        "endLine": 67,
+        "endChar": 136
+      },
+      "revId": "c86a7aa5d87df3e7231ec7129835c75c3b9e9a0a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8ee871c_8378782d",
+        "filename": "main.yml",
+        "patchSetId": 7
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2018-01-14T06:58:27Z",
+      "side": 1,
+      "message": "1. Can we use a module for configuring the interface?\n2. Can we somehow use a generic one? probably not all the setup will use the same subnets/interfaces etc.",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 47
+      },
+      "revId": "c86a7aa5d87df3e7231ec7129835c75c3b9e9a0a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
