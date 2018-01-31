@@ -168,6 +168,7 @@
                           -v OS_COMPUTE_1_IP:$OPENSTACK_COMPUTE_NODE_1_IP \
                           -v OS_COMPUTE_2_IP:$OPENSTACK_COMPUTE_NODE_2_IP \
                           -v OS_USER:heat-admin \
+                          -v ODL_ENABLE_L3_FWD:yes \
                           -v ODL_SYSTEM_USER:heat-admin \
                           -v ODL_SYSTEM_PROMPT:\$ \
                           -v PRE_CLEAN_OPENSTACK_ALL:True \
