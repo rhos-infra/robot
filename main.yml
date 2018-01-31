@@ -35,6 +35,7 @@
         package:
             name: docker
             state: latest
+        become: true
 
       - name: pull container image
         docker_image:
@@ -45,6 +46,7 @@
             - absent
             - present
         tags: container-image
+        become: true
 
       - name: update odl_test repository in docker container image
         shell: |
@@ -54,6 +56,7 @@
             " > {{ dockerdir }}/Dockerfile
             docker tag {{ test.container.image.name }} {{ test.container.image.name }}_before_git_pull
             docker build -t {{ test.container.image.name }} {{ dockerdir }}
+        become: true
 
       - name: set fact for overcloudrc
         set_fact:

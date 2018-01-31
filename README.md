@@ -20,6 +20,10 @@ Run:
     virtualenv venv
     source venv/bin/activate
     pip install -e .
+    
+create a 'hosts' file, with content i.e.:
+
+     tester ansible_connection=local ansible_python_interpreter=python
 
 Add this 'robot' plugin to Infrared:
 
