@@ -126,7 +126,18 @@
             ssh -i ~stack/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null \
                 -o UserKnownHostsFile=/dev/null -o LogLevel=error \
                 heat-admin@$OPENSTACK_CONTROL_NODE_1_IP "sudo ip tuntap add dev internet_tap mode tap; \
-                                                             sudo ifconfig internet_tap up 10.9.9.9/24;"
+                                                         sudo ifconfig internet_tap up 10.9.9.9/24; \
+                                                         sudo ip netns add pnf_ns; \
+                                                         sudo ip link add pnf_veth0 type veth peer name pnf_veth1 \
+                                                         sudo ip link set pnf_veth1 netns pnf_ns \
+                                                         sudo ip link set pnf_veth0 up \
+                                                         sudo ip netns exec pnf_ns ip link set dev lo up \
+                                                         sudo ip netns exec pnf_ns ip addr add dev pnf_veth1 10.10.10.250/24 \
+                                                         sudo ip netns exec pnf_ns ip link set dev pnf_veth1 up \
+                                                         sudo ip netns exec pnf_ns ip route add default via 10.10.10.250 \
+                                                         sudo ovs-vsctl add-port br-ex pnf_veth0 \
+                                                         sudo ip addr add dev br-ex 10.10.10.250/24 \
+                                                         sudo ip link set dev br-ex up"
 
             # ODL Robot CSIT runs tempest tests from the control node, so installing that there
             ssh -i ~stack/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null \
