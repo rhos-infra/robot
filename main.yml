@@ -125,8 +125,36 @@
             # Simulate an external internet address on the control node
             ssh -i ~stack/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null \
                 -o UserKnownHostsFile=/dev/null -o LogLevel=error \
-                heat-admin@$OPENSTACK_CONTROL_NODE_1_IP "sudo ip tuntap add dev internet_tap mode tap; \
-                                                             sudo ifconfig internet_tap up 10.9.9.9/24;"
+                heat-admin@$OPENSTACK_CONTROL_NODE_1_IP "sudo iptables -I INPUT -p tcp --dport 12345 -j ACCEPT; \
+                                                         sudo iptables -I INPUT -p udp --dport 12345 -j ACCEPT; \
+                                                         sudo ip tuntap add dev internet_tap mode tap; \
+                                                         sudo ifconfig internet_tap up 10.9.9.9/24; \
+                                                         sudo ip netns add pnf_ns; \
+                                                         sudo ip link add pnf_veth0 type veth peer name pnf_veth1; \
+                                                         sudo ip link set pnf_veth1 netns pnf_ns; \
+                                                         sudo ip link set pnf_veth0 up; \
+                                                         sudo ip netns exec pnf_ns ip link set dev lo up; \
+                                                         sudo ip netns exec pnf_ns ip addr add dev pnf_veth1 10.10.10.253/24; \
+                                                         sudo ip netns exec pnf_ns ip link set dev pnf_veth1 up; \
+                                                         sudo ip netns exec pnf_ns ip route add default via 10.10.10.250; \
+                                                         sudo ovs-vsctl add-port br-ex pnf_veth0; \
+                                                         sudo ip addr add dev br-ex 10.10.10.250/24; \
+                                                         sudo ip link set dev br-ex up; \
+                                                         sudo ovs-vsctl --may-exist add-br $PUBLIC_BRIDGE -- set bridge $PUBLIC_BRIDGE other_config:disable-in-band=true other_config:hwaddr=f6:00:00:ff:01:01; \
+                                                         sudo ovs-vsctl add-port br-ex compute1_vxlan -- set interface compute1_vxlan type=vxlan options:local_ip=$OPENSTACK_CONTROL_NODE_1_IP options:remote_ip=$OPENSTACK_COMPUTE_NODE_1_IP options:dst_port=9876 options:key=flow; \
+                                                         sudo ovs-vsctl add-port br-ex compute2_vxlan -- set interface compute2_vxlan type=vxlan options:local_ip=$OPENSTACK_CONTROL_NODE_1_IP options:remote_ip=$OPENSTACK_COMPUTE_NODE_2_IP options:dst_port=9876 options:key=flow;"
+
+            ssh -i ~stack/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null \
+                -o UserKnownHostsFile=/dev/null -o LogLevel=error \
+                heat-admin@OPENSTACK_COMPUTE_NODE_1_IP "sudo ovs-vsctl --may-exist add-br br-ex -- set bridge br-ex other_config:disable-in-band=true other_config:hwaddr=f6:00:00:ff:01:02; \
+                                                        sudo ovs-vsctl add-port br-ex control_vxlan -- set interface control_vxlan type=vxlan options:local_ip=$OPENSTACK_COMPUTE_NODE_1_IP options:remote_ip=$OPENSTACK_CONTROL_NODE_1_IP options:dst_port=9876 options:key=flow;"
+
+
+            ssh -i ~stack/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null \
+                    -o UserKnownHostsFile=/dev/null -o LogLevel=error \
+                    heat-admin@OPENSTACK_COMPUTE_NODE_2_IP "sudo ovs-vsctl --may-exist add-br br-ex -- set bridge br-ex other_config:disable-in-band=true other_config:hwaddr=f6:00:00:ff:01:03; \
+                                                            sudo ovs-vsctl add-port br-ex control_vxlan -- set interface control_vxlan type=vxlan options:local_ip=$OPENSTACK_COMPUTE_NODE_2_IP options:remote_ip=$OPENSTACK_CONTROL_NODE_1_IP options:dst_port=9876 options:key=flow;"
+
 
             # ODL Robot CSIT runs tempest tests from the control node, so installing that there
             ssh -i ~stack/.ssh/id_rsa -o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null \
