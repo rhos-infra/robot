@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f29702c_55a56400",
+        "filename": "main.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2018-02-22T11:19:22Z",
+      "side": 1,
+      "message": "It should be 10.10.10.253",
+      "range": {
+        "startLine": 135,
+        "startChar": 109,
+        "endLine": 135,
+        "endChar": 121
+      },
+      "revId": "fb154de3cf4f8bfca6a414d6ab97990086af6dbc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
