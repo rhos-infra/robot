@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62381615_cb22a10c",
+        "filename": "main.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2018-02-28T07:07:02Z",
+      "side": 1,
+      "message": "Do we need these lines?",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 278
+      },
+      "revId": "98d5c335f43d315797df6a8cd3274cd932581841",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "470a07a8_a690fd05",
+        "filename": "main.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1005532
+      },
+      "writtenOn": "2018-02-28T07:07:02Z",
+      "side": 1,
+      "message": "Same for these lines",
+      "range": {
+        "startLine": 147,
+        "startChar": 1,
+        "endLine": 156,
+        "endChar": 279
+      },
+      "revId": "98d5c335f43d315797df6a8cd3274cd932581841",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
