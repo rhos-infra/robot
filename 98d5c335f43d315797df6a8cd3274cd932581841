@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "7fb6f33a_6954336b",
+        "filename": "main.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1012535
+      },
+      "writtenOn": "2018-03-03T02:55:24Z",
+      "side": 1,
+      "message": "what is port 12345?",
+      "range": {
+        "startLine": 128,
+        "startChar": 95,
+        "endLine": 128,
+        "endChar": 100
+      },
+      "revId": "98d5c335f43d315797df6a8cd3274cd932581841",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7eb21b8_6edc8760",
+        "filename": "main.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1012535
+      },
+      "writtenOn": "2018-03-03T02:55:24Z",
+      "side": 1,
+      "message": "all this stuff is needed if doing the full suite of tests. The external suite does the typical external networking tests like reaching the external ips, and then there are pnf tests.",
+      "revId": "98d5c335f43d315797df6a8cd3274cd932581841",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62381615_cb22a10c",
         "filename": "main.yml",
         "patchSetId": 4
@@ -25,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "9a9abc06_c4809a7e",
+        "filename": "main.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1012535
+      },
+      "writtenOn": "2018-03-03T02:55:24Z",
+      "side": 1,
+      "message": "This is for simulating an external network. In the upstream csit we don\u0027t have an external interface to the internet and only have a single interface. These lines add vxlan tunnels on the bridge to act like an external gateway. It tunnels everything back to the bridge on the control node and then to the ip on the bridge.",
+      "parentUuid": "62381615_cb22a10c",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 278
+      },
+      "revId": "98d5c335f43d315797df6a8cd3274cd932581841",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "470a07a8_a690fd05",
         "filename": "main.yml",
         "patchSetId": 4
@@ -36,6 +100,30 @@
       "writtenOn": "2018-02-28T07:07:02Z",
       "side": 1,
       "message": "Same for these lines",
+      "range": {
+        "startLine": 147,
+        "startChar": 1,
+        "endLine": 156,
+        "endChar": 279
+      },
+      "revId": "98d5c335f43d315797df6a8cd3274cd932581841",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8a34ca5_c10970df",
+        "filename": "main.yml",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1012535
+      },
+      "writtenOn": "2018-03-03T02:55:24Z",
+      "side": 1,
+      "message": "same thing. these are the vxlan ports on the computes to get back to the control node.",
+      "parentUuid": "470a07a8_a690fd05",
       "range": {
         "startLine": 147,
         "startChar": 1,
