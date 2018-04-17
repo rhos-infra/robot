@@ -73,7 +73,7 @@
             source ~stack/stackrc
             OPENSTACK_SERVERS="$(openstack server list)"
             set -a
-            ODL_IP=$(egrep no_proxy {{ overcloudrc }} | cut -d',' -f3)
+            ODL_IP=$(egrep no_proxy {{ overcloudrc }} | grep -o '[^,]*$')
             OPENSTACK_CONTROL_NODE_1_IP=$(echo "$OPENSTACK_SERVERS" | egrep controller-0 | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
             OPENSTACK_CONTROL_NODE_2_IP=$(echo "$OPENSTACK_SERVERS" | egrep controller-1 | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+') || true
             OPENSTACK_CONTROL_NODE_3_IP=$(echo "$OPENSTACK_SERVERS" | egrep controller-2 | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+') || true
