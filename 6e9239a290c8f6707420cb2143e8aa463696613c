@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3f665610_302b691c",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1008934
+      },
+      "writtenOn": "2018-04-18T16:15:01Z",
+      "side": 1,
+      "message": "fair request.\n\nso maybe test.odl.restconf.username, etc. or even expand\nodl to opendaylight, like Waldek suggested in the other\npatch.",
+      "parentUuid": "2f7a81bc_7998e15d",
+      "range": {
+        "startLine": 177,
+        "startChar": 50,
+        "endLine": 177,
+        "endChar": 67
+      },
+      "revId": "6e9239a290c8f6707420cb2143e8aa463696613c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "98ca7dde_65ad23d1",
         "filename": "plugin.spec",
         "patchSetId": 1
