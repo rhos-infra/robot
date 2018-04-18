@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8df4b42_71192e1e",
+        "filename": "main.yml",
+        "patchSetId": 11
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1010634
+      },
+      "writtenOn": "2018-04-18T16:41:05Z",
+      "side": 1,
+      "message": "it\u0027s probably required to have | default(\u0027\u0027) as we don\u0027t have these ansible facts in non-ha setup",
+      "range": {
+        "startLine": 285,
+        "startChar": 48,
+        "endLine": 285,
+        "endChar": 99
+      },
+      "revId": "9af137564dafd045e401c835d5e0e17d38c9e51d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
