@@ -174,6 +174,8 @@
                           -v PRE_CLEAN_OPENSTACK_ALL:True \
                           -v PUBLIC_PHYSICAL_NETWORK:datacentre \
                           -v RESTCONFPORT:8081 \
+                          -v ODL_RESTCONF_USER:{{ test.odl.username }} \
+                          -v ODL_RESTCONF_PASSWORD:{{ test.odl.password }} \
                           -v SECURITY_GROUP_MODE:stateful \
                           -v USER_HOME:/home/stack \
                           -v WORKSPACE:{{ workdir }}/workspace  \

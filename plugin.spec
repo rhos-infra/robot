@@ -21,5 +21,15 @@ subparsers:
                       help: |
                           Name of the container image to use to run Robot in.
                       default: opnfv/cperf:latest
-
-
+            - title: ODL authentication
+              options:
+                  odl-username:
+                      type: Value
+                      help: |
+                          Username for ODL REST
+                      default: odladmin
+                   odl-password:
+                      type: Value
+                      help: |
+                          Password for ODL REST
+                      default: redhat
