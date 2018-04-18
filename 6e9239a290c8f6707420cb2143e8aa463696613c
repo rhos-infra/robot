@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f7a81bc_7998e15d",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1010634
+      },
+      "writtenOn": "2018-04-18T16:05:51Z",
+      "side": 1,
+      "message": "similar question to one left in rhos-qe-jenkins change request - should we name the username/password variables accordingly (to avoid future conflicts with other username/passwords we may use, i.e.: custom karaf (if any)) etc.",
+      "range": {
+        "startLine": 177,
+        "startChar": 50,
+        "endLine": 177,
+        "endChar": 67
+      },
+      "revId": "6e9239a290c8f6707420cb2143e8aa463696613c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98ca7dde_65ad23d1",
+        "filename": "plugin.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1010634
+      },
+      "writtenOn": "2018-04-18T16:05:51Z",
+      "side": 1,
+      "message": "indentation \u003d broken yaml",
+      "range": {
+        "startLine": 31,
+        "startChar": 18,
+        "endLine": 31,
+        "endChar": 19
+      },
+      "revId": "6e9239a290c8f6707420cb2143e8aa463696613c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
