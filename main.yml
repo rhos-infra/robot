@@ -26,14 +26,23 @@
       - name: list overcloud resources - see whether there still are any leftovers
         shell: |
             . {{ ansible_user_dir }}/overcloudrc
+            echo "openstack server list --all-projects"
             openstack server list --all-projects
+            echo "openstack network list"
             openstack network list
+            echo "openstack subnet list"
             openstack subnet list
+            echo "openstack floating ip list"
             openstack floating ip list
+            echo "openstack port list"
             openstack port list
+            echo "openstack router list"
             openstack router list
+            echo "openstack stack list"
             openstack stack list
+            echo "openstack keypair list"
             openstack keypair list
+            echo "openstack security group list"
             openstack security group list
 
       - name: install required RPMs
@@ -110,14 +119,23 @@
       - name: list overcloud resources
         shell: |
             . {{ ansible_user_dir }}/overcloudrc
+            echo "openstack server list --all-projects"
             openstack server list --all-projects
+            echo "openstack network list"
             openstack network list
+            echo "openstack subnet list"
             openstack subnet list
+            echo "openstack floating ip list"
             openstack floating ip list
+            echo "openstack port list"
             openstack port list
+            echo "openstack router list"
             openstack router list
+            echo "openstack stack list"
             openstack stack list
+            echo "openstack keypair list"
             openstack keypair list
+            echo "openstack security group list"
             openstack security group list
 
       - name: Enable internal_api on tester
@@ -309,8 +327,8 @@
                           -v RESTCONFPORT:8081 \
                           -v ODL_RESTCONF_USER:{{ test.opendaylight.username }} \
                           -v ODL_RESTCONF_PASSWORD:{{ test.opendaylight.password }} \
-                          -v KARAF_PROMPT_LOGIN:karaf \
-                          -v KARAF_PROMPT:karaf.*root.* \
+                          -v KARAF_PROMPT_LOGIN:'{{ test.karaf.prompt.login }}' \
+                          -v KARAF_PROMPT:'{{ test.karaf.prompt.line }}' \
                           -v SECURITY_GROUP_MODE:stateful \
                           -v USER_HOME:/home/stack \
                           -v WORKSPACE:{{ workdir }}/workspace  \
