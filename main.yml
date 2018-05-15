@@ -283,6 +283,7 @@
             STACK_HOME=~stack
             robot_cmd="pybot \
                           --removekeywords wuks \
+                          --xunit robotxunit.xml \
                           -c critical \
                           -e exclude \
                           -d {{ resultsdir }} \
