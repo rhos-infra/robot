@@ -11,10 +11,16 @@
             protocol: tcp
             jump: ACCEPT
         become: true
+
       - name: save iptables
         command: iptables-save
         become: true
 
+      - name: Change log level of genius
+        command: "sshpass -p karaf ssh -o StrictHostKeyChecking=no -p 8101 karaf@localhost 'log:set DEBUG org.opendaylight.genius'"
+
+      - name: Change log level of elan
+        command: "sshpass -p karaf ssh -o StrictHostKeyChecking=no -p 8101 karaf@localhost 'log:set TRACE org.opendaylight.netvirt.elan'"
 
 - name: Prepare and run Robot tests
   hosts: tester
