@@ -55,3 +55,9 @@ subparsers:
                           Type of environment OpenDaylight was deployed in: baremetal, VM
                       default: VM
                       required: yes
+            - title: Cleanups
+              options:
+                  cleanup-before:
+                      type: Bool
+                      help: Whether to clean openstack resources (routers, security groups etc.) before running robot.
+                      default: no
