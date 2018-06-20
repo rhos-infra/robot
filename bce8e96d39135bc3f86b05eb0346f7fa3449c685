@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9be8143d_54183b91",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1008934
+      },
+      "writtenOn": "2018-06-20T17:01:42Z",
+      "side": 1,
+      "message": "could you add a little context to why this change is coming? just so we can\nfollow along :)",
+      "revId": "bce8e96d39135bc3f86b05eb0346f7fa3449c685",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
