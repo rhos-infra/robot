@@ -44,6 +44,7 @@
             openstack keypair list
             echo "openstack security group list"
             openstack security group list
+        when: test.get('cleanup', {}).get('before', {})
 
       - name: install required RPMs
         package:
@@ -62,6 +63,7 @@
             repo: https://github.com/yazug/shade_janitor
             dest: shade_janitor
         tags: overcloud-cleanup
+        when: test.get('cleanup', {}).get('before', {})
 
       - name: Create robot virtualenv with latest pip, setuptools
         pip:
@@ -72,6 +74,7 @@
             - setuptools
             - pip
         tags: overcloud-cleanup
+        when: test.get('cleanup', {}).get('before', {})
 
       - name: install shade_janitor
         shell: |
@@ -82,6 +85,7 @@
                 pip install -r requirements.txt >> pip_install_requirements.txt
                 pip list > pip_list.txt
         tags: overcloud-cleanup
+        when: test.get('cleanup', {}).get('before', {})
 
       - name: run shade_janitor to cleanup overcloud
         shell: |
@@ -115,6 +119,7 @@
         delay: 5
         ignore_errors: true
         tags: overcloud-cleanup
+        when: test.get('cleanup', {}).get('before', {})
 
       - name: list overcloud resources
         shell: |
