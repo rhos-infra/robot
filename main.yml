@@ -314,6 +314,14 @@
             set -x
             source {{ overcloudrc }}
             STACK_HOME=~stack
+            # Figure out which karaf prompt we need, since it's changed between GA and Z-stream releases
+            if [ "$OSP_RELEASE" == "GA" ]; then
+              $KARAF_PROMPT_LOGIN="karaf"
+              $KARAF_PROMPT="karaf.*root.*"
+            else
+              $KARAF_PROMPT_LOGIN="opendaylight-user"
+              $KARAF_PROMPT="opendaylight-user.*root.*>"
+            fi
             robot_cmd="pybot \
                           --removekeywords wuks \
                           --xunit robotxunit.xml \
@@ -330,6 +338,8 @@
                           -v HA_PROXY_1_IP:$ODL_IP \
                           -v HA_PROXY_2_IP:$ODL_IP \
                           -v HA_PROXY_3_IP:$ODL_IP \
+                          -v KARAF_PROMPT_LOGIN:$KARAF_PROMPT_LOGIN \
+                          -v KARAF_PROMPT:$KARAF_PROMPT \
                           -v NUM_ODL_SYSTEM:{{ groups['controller'] | length }} \
                           -v NUM_OS_SYSTEM:3 \
                           -v NUM_TOOLS_SYSTEM:0 \
@@ -361,8 +371,6 @@
                           -v RESTCONFPORT:8081 \
                           -v ODL_RESTCONF_USER:{{ test.opendaylight.username }} \
                           -v ODL_RESTCONF_PASSWORD:{{ test.opendaylight.password }} \
-                          -v KARAF_PROMPT_LOGIN:'{{ test.karaf.prompt.login }}' \
-                          -v KARAF_PROMPT:'{{ test.karaf.prompt.line }}' \
                           -v SECURITY_GROUP_MODE:stateful \
                           -v USER_HOME:/home/stack \
                           -v WORKSPACE:{{ workdir }}/workspace  \
