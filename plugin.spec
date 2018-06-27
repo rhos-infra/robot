@@ -39,14 +39,14 @@ subparsers:
                           Username/login that shows up when logged in to karaf console.
                           NOTE: It should be set to 'opendaylight-user' for OSP12 and earlier,
                           karaf 3, Carbon and earlier.
-                      default: 'karaf'
+                      default: 'opendaylight-user'
                   karaf-prompt-line:
                       type: Value
                       help: |
                           Prompt of the karaf console.
                           NOTE: it should be set to 'opendaylight-user.*root.*>'
                           for OSP12 and earlier, karaf 3, Carbon and earlier.
-                      default: 'karaf.*root.*'
+                      default: 'opendaylight-user.*root.*>'
             - title: Deployment environment
               options:
                   deployment-environment:
