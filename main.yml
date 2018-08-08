@@ -333,6 +333,7 @@
                           -v NUM_ODL_SYSTEM:{{ groups['controller'] | length }} \
                           -v NUM_OS_SYSTEM:3 \
                           -v NUM_TOOLS_SYSTEM:0 \
+                          -v OPENSTACK_TOPO:0cmb-1ctl-2cmp \
                           -v ODL_SNAT_MODE:conntrack \
                           -v ODL_STREAM:carbon \
                           -v ODL_SYSTEM_IP:$ODL_IP \
