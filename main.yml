@@ -199,7 +199,7 @@
             RUN cd /home/opnfv/repos/odl_test/ && git pull origin master
             " > {{ dockerdir }}/Dockerfile
             docker tag {{ test.container.image.name }} {{ test.container.image.name }}_before_git_pull
-            docker build --network=host -t {{ test.container.image.name }} {{ dockerdir }}
+            docker build -t {{ test.container.image.name }} {{ dockerdir }}
 
       - name: set fact for overcloudrc
         set_fact:
