@@ -192,11 +192,12 @@
             - present
         tags: container-image
 
-      - name: update odl_test repository in docker container image
+      - name: update odl_test repository and install odltools in docker container image
         shell: |
             echo "
             FROM {{ test.container.image.name }}
             RUN cd /home/opnfv/repos/odl_test/ && git pull origin master
+            RUN pip install odltools
             " > {{ dockerdir }}/Dockerfile
             docker tag {{ test.container.image.name }} {{ test.container.image.name }}_before_git_pull
             docker build --network=host -t {{ test.container.image.name }} {{ dockerdir }}
@@ -242,7 +243,7 @@
               openstack flavor create --id 0 --vcpus 1 --ram 64 --disk 1 m1.nano
             fi
 
-      - name: ODL Robot CSIT creates it's own external network, so delete it here beforehand
+      - name: ODL Robot CSIT creates its own external network, so delete it an existing public network
         shell: |
             source {{ overcloudrc }}
             if openstack network show nova; then
