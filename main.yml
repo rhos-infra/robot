@@ -2,6 +2,7 @@
   hosts: controller
   gather_facts: yes
   any_errors_fatal: true
+  vars_files: [ "vars.yml" ]
   tasks:
       - name: Allow karaf port on controllers
         iptables:
@@ -10,18 +11,30 @@
             destination_port: 8101
             protocol: tcp
             jump: ACCEPT
+            ip_version: "{{ item }}"
         become: true
+        with_items:
+            - ipv4
+            - ipv6
+
       - name: save iptables
         command: iptables-save
         become: true
+
+      - name: discover IP karaf is listening on (IPv4 or v6)
+        shell: |
+            find /var/lib/config-data /opt -name "*karaf.shell.cfg*" 2>/dev/null | head -1 | xargs grep "sshHost =" | cut -d' ' -f3
+        register: karaf_shell_ip
+        become: true
+        tags: ip
 
 
 - name: Prepare and run Robot tests
   hosts: tester
   gather_facts: yes
   any_errors_fatal: true
+  vars_files: [ "vars.yml" ]
   tasks:
-
       # TODO: remove once opendaylight jobs don't leave any residue (i.e.: routers) after running tempest tests
       - name: list overcloud resources - see whether there still are any leftovers
         shell: |
@@ -143,22 +156,37 @@
             echo "openstack security group list"
             openstack security group list
 
+      - name: set facts with ODL IPs
+        set_fact:
+            odl_system_ip: "[{{ hostvars['controller-0']['karaf_shell_ip']['stdout'] }}]"
+            odl_system_1_ip: "{{ hostvars['controller-0']['karaf_shell_ip']['stdout'] }}"
+            odl_system_2_ip: "{{ hostvars['controller-1']['karaf_shell_ip']['stdout'] }}"
+            odl_system_3_ip: "{{ hostvars['controller-2']['karaf_shell_ip']['stdout'] }}"
+        tags: ip
+
       - name: Enable internal_api on tester
         become: true
         shell: |
             ip link add link eth1 name eth1.20 type vlan id 20
-            ifconfig eth1.20 172.17.1.150/24 up
+            {% if '::' in odl_system_ip %}
+            ip addr add {{ odl_system_ip | regex_replace('::\d+$', '::9999/64') }} dev eth1.20
+            {% else %}
+            ip addr add {{ odl_system_ip | regex_replace('\.\d+$', '.150/24') }} dev eth1.20
+            {% endif %}
+            ip link set eth1.20 up
         tags: ha
 
       - name: set workdir fact
         set_fact:
             workdir: "{{ ansible_user_dir }}/robot"
+        tags: always
 
       - name: set logdir, dockerdir, resultsdir facts
         set_fact:
             logdir: "{{ workdir }}/logs"
             dockerdir: "{{ workdir }}/docker"
             resultsdir: "{{ workdir }}/results"
+        tags: always
 
       - name: recreate workdir
         file:
@@ -205,15 +233,16 @@
       - name: set fact for overcloudrc
         set_fact:
             overcloudrc: "{{ workdir }}/overcloudrc"
+        tags: always
 
       - name: remove old overcloudrc
         file:
-            path: "{{ overcloudrc }}"
-            state: absent
+          path: "{{ overcloudrc }}"
+          state: absent
 
       - name: make a copy of overcloudrc as we will have to tweak it
         shell: |
-            cp -f ~stack/overcloudrc {{ overcloudrc }}
+          cp -f ~stack/overcloudrc {{ overcloudrc }}
 
       - name: find IPs of OpenDaylight and OpenStack nodes
         shell: |
@@ -227,6 +256,7 @@
             OPENSTACK_COMPUTE_NODE_1_IP=$(echo "$OPENSTACK_SERVERS" | egrep compute-0 | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
             OPENSTACK_COMPUTE_NODE_2_IP=$(echo "$OPENSTACK_SERVERS" | egrep compute-1 | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+') || true
             env | grep -E "ODL_IP|OPENSTACK_" >> {{ overcloudrc }}
+        tags: ip
 
       - name: make sure cirros guest images are available for use by the tests
         shell: |
@@ -308,7 +338,8 @@
                 -o UserKnownHostsFile=/dev/null -o LogLevel=error \
                 heat-admin@$OPENSTACK_CONTROL_NODE_1_IP "sudo yum install -y openstack-tempest"
 
-#      - name: prepare commands depending on deployment environment
+      - debug:
+            var: hostvars[inventory_hostname]
 
       - name: run Robot
         shell: |
@@ -336,23 +367,21 @@
                           -v NUM_TOOLS_SYSTEM:0 \
                           -v OPENSTACK_TOPO:0cmb-1ctl-2cmp \
                           -v ODL_SNAT_MODE:conntrack \
-                          -v ODL_STREAM:carbon \
-                          -v ODL_SYSTEM_IP:$ODL_IP \
-                          -v ODL_SYSTEM_1_IP:$ODL_IP \
+                          -v ODL_STREAM: {{ osp_version[test.osp.version | int].opendaylight_release }} \
                           -v OS_CONTROL_NODE_IP:$ODL_IP \
                           -v OS_CONTROL_NODE_1_IP:$OPENSTACK_CONTROL_NODE_1_IP \
                           -v OS_CONTROL_NODE_2_IP:$OPENSTACK_CONTROL_NODE_2_IP \
                           -v OS_CONTROL_NODE_3_IP:$OPENSTACK_CONTROL_NODE_3_IP \
-                          -v OPENSTACK_BRANCH:stable/pike \
+                          -v OPENSTACK_BRANCH:stable/{{ osp_version[test.osp.version | int].openstack_branch }} \
                           -v OS_COMPUTE_1_IP:$OPENSTACK_COMPUTE_NODE_1_IP \
                           -v OS_COMPUTE_2_IP:$OPENSTACK_COMPUTE_NODE_2_IP \
-                          -v ODL_SYSTEM_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
-                          -v ODL_SYSTEM_1_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
+                          -v ODL_SYSTEM_IP:{{ odl_system_ip }} \
+                          -v ODL_SYSTEM_1_IP:{{ odl_system_1_ip }} \
                           {%- if hostvars['controller-1'] is defined %}
-                          -v ODL_SYSTEM_2_IP:{{ hostvars['controller-1']['facter_ipaddress_vlan20'] | default('') }} \
+                          -v ODL_SYSTEM_2_IP:{{ odl_system_2_ip }} \
                           {% endif %}
                           {%- if hostvars['controller-2'] is defined %}
-                          -v ODL_SYSTEM_3_IP:{{ hostvars['controller-2']['facter_ipaddress_vlan20'] | default('') }} \
+                          -v ODL_SYSTEM_3_IP:{{ odl_system_3_ip  }} \
                           {% endif %}
                           -v OS_USER:heat-admin \
                           -v ODL_ENABLE_L3_FWD:yes \
