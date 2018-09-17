@@ -408,3 +408,11 @@
             flat: yes
             fail_on_missing: no
         with_items: "{{ robot_results_files.files }}"
+
+      - name: Fetch JUnit XML results file
+        fetch:
+          src: "{{ item.path }}"
+          dest: "{{ inventory_dir }}/robot_results/"
+          flat: yes
+          fail_on_missing: no
+        with_items: "{{ robot_results_files.files }}"
