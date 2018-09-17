@@ -21,7 +21,6 @@
   gather_facts: yes
   any_errors_fatal: true
   tasks:
-
       # TODO: remove once opendaylight jobs don't leave any residue (i.e.: routers) after running tempest tests
       - name: list overcloud resources - see whether there still are any leftovers
         shell: |
@@ -308,7 +307,15 @@
                 -o UserKnownHostsFile=/dev/null -o LogLevel=error \
                 heat-admin@$OPENSTACK_CONTROL_NODE_1_IP "sudo yum install -y openstack-tempest"
 
-#      - name: prepare commands depending on deployment environment
+      - name: set facts with ODL IPs (try to use IPv6 addresses if IPv4 not available)
+        set_fact:
+            odl_system_ip: "{{ (hostvars['controller-0']['facter_ipaddress_vlan20'] is defined) | ternary(hostvars['controller-0']['facter_ipaddress_vlan20'], hostvars['controller-0']['ansible_vlan20']['ipv6'][0]['address']) }}"
+            odl_system_1_ip: "{{ (hostvars['controller-0']['facter_ipaddress_vlan20'] is defined) | ternary(hostvars['controller-0']['facter_ipaddress_vlan20'], hostvars['controller-0']['ansible_vlan20']['ipv6'][0]['address']) }}"
+            odl_system_2_ip: "{{ (hostvars['controller-1']['facter_ipaddress_vlan20'] is defined) | ternary(hostvars['controller-1']['facter_ipaddress_vlan20'], hostvars['controller-1']['ansible_vlan20']['ipv6'][0]['address']) | default('') }}"
+            odl_system_3_ip: "{{ (hostvars['controller-2']['facter_ipaddress_vlan20'] is defined) | ternary(hostvars['controller-2']['facter_ipaddress_vlan20'], hostvars['controller-2']['ansible_vlan20']['ipv6'][0]['address']) | default('') }}"
+
+      - debug:
+            var: hostvars[inventory_hostname]
 
       - name: run Robot
         shell: |
@@ -337,8 +344,6 @@
                           -v OPENSTACK_TOPO:0cmb-1ctl-2cmp \
                           -v ODL_SNAT_MODE:conntrack \
                           -v ODL_STREAM:carbon \
-                          -v ODL_SYSTEM_IP:$ODL_IP \
-                          -v ODL_SYSTEM_1_IP:$ODL_IP \
                           -v OS_CONTROL_NODE_IP:$ODL_IP \
                           -v OS_CONTROL_NODE_1_IP:$OPENSTACK_CONTROL_NODE_1_IP \
                           -v OS_CONTROL_NODE_2_IP:$OPENSTACK_CONTROL_NODE_2_IP \
@@ -346,13 +351,13 @@
                           -v OPENSTACK_BRANCH:stable/pike \
                           -v OS_COMPUTE_1_IP:$OPENSTACK_COMPUTE_NODE_1_IP \
                           -v OS_COMPUTE_2_IP:$OPENSTACK_COMPUTE_NODE_2_IP \
-                          -v ODL_SYSTEM_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
-                          -v ODL_SYSTEM_1_IP:{{ hostvars['controller-0']['facter_ipaddress_vlan20'] }} \
+                          -v ODL_SYSTEM_IP:{{ odl_system_ip }} \
+                          -v ODL_SYSTEM_1_IP:{{ odl_system_1_ip }} \
                           {%- if hostvars['controller-1'] is defined %}
-                          -v ODL_SYSTEM_2_IP:{{ hostvars['controller-1']['facter_ipaddress_vlan20'] | default('') }} \
+                          -v ODL_SYSTEM_2_IP:{{ odl_system_2_ip }} \
                           {% endif %}
                           {%- if hostvars['controller-2'] is defined %}
-                          -v ODL_SYSTEM_3_IP:{{ hostvars['controller-2']['facter_ipaddress_vlan20'] | default('') }} \
+                          -v ODL_SYSTEM_3_IP:{{ odl_system_3_ip  }} \
                           {% endif %}
                           -v OS_USER:heat-admin \
                           -v ODL_ENABLE_L3_FWD:yes \
