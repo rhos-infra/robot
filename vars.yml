@@ -1,0 +1,10 @@
+osp_version:
+  14:
+    openstack_branch: "queens"
+    opendaylight_release: 'oxygen'
+  13:
+    openstack_branch: "queens"
+    opendaylight_release: 'oxygen'
+  12:
+    openstack_branch: "pike"
+    opendaylight_release: 'carbon'
