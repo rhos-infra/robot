@@ -56,6 +56,12 @@ subparsers:
                           Type of environment OpenDaylight was deployed in: baremetal, VM
                       default: VM
                       required: yes
+                  osp-version:
+                      type: Value
+                      help: |
+                          OSP version. Example: 14
+                      required: yes
+
             - title: Cleanups
               options:
                   cleanup-before:
