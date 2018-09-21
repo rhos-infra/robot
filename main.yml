@@ -169,14 +169,12 @@
         shell: |
             ip link add link eth1 name eth1.20 type vlan id 20
             {% if '::' in odl_system_ip %}
-            ip addr add {{ odl_system_ip | regex_replace('\[|\]', '') | regex_replace('::\d+$', '::9999/64') }} dev eth1.20
+            ip addr add {{ odl_system_ip | regex_replace('::\d+$', '::9999/64') }} dev eth1.20
             {% else %}
-            ip addr add {{ odl_system_ip | regex_replace('\.\d+$', '.150/24') }} dev eth1.20
+            ip addr add {{ odl_system_ip | regex_replace('\[|\]', '') | regex_replace('\.\d+$', '.150/24') }} dev eth1.20
             {% endif %}
             ip link set eth1.20 up
-        tags:
-          - ha
-          - ip
+        tags: ha
 
       - name: set workdir fact
         set_fact:
