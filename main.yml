@@ -67,6 +67,7 @@
         with_items:
             - python-virtualenv
             - gcc
+            - docker
         tags: overcloud-cleanup
 
       - name: setup shade_janitor to purge openstack resources possibly left after tempest run
@@ -206,11 +207,6 @@
             - "{{ logdir }}"
             - "{{ dockerdir }}"
             - "{{ resultsdir }}"
-
-      - name: install or update required software
-        package:
-            name: docker
-            state: latest
 
       - name: pull container image
         docker_image:
