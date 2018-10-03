@@ -1,6 +1,6 @@
 osp_version:
   14:
-    openstack_branch: "queens"
+    openstack_branch: "rocky"
     opendaylight_release: 'oxygen'
   13:
     openstack_branch: "queens"
