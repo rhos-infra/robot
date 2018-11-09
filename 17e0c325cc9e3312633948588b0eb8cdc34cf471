@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d7f15bc_7d41fe22",
+        "filename": "main.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1008934
+      },
+      "writtenOn": "2018-11-09T23:45:50Z",
+      "side": 1,
+      "message": "cool. this is something we do in the ODL CI:\nhttps://git.opendaylight.org/gerrit/gitweb?p\u003dreleng/builder.git;a\u003dblob;f\u003djjb/integration/integration-apex-run-tests.sh;h\u003de7875281b03c5ada6f8c7a9b871f287b50643888;hb\u003d573bd342409bdbd2da31ee7d9fa29884f661da9d#l128",
+      "range": {
+        "startLine": 351,
+        "startChar": 26,
+        "endLine": 351,
+        "endChar": 40
+      },
+      "revId": "17e0c325cc9e3312633948588b0eb8cdc34cf471",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
