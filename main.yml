@@ -222,11 +222,12 @@
         shell: |
             echo "
             FROM {{ test.container.image.name }}
-            RUN cd /home/opnfv/repos/odl_test/ && git pull origin master
-            RUN pip install odltools
+            RUN cd /home/opnfv/repos/odl_test/ && time git pull origin master
+            RUN time pip install odltools
             " > {{ dockerdir }}/Dockerfile
             docker tag {{ test.container.image.name }} {{ test.container.image.name }}_before_git_pull
             docker build --network=host -t {{ test.container.image.name }} {{ dockerdir }}
+        tags: requirements
 
       - name: set fact for overcloudrc
         set_fact:
@@ -237,10 +238,12 @@
         file:
           path: "{{ overcloudrc }}"
           state: absent
+        tags: always
 
       - name: make a copy of overcloudrc as we will have to tweak it
         shell: |
           cp -f ~stack/overcloudrc {{ overcloudrc }}
+        tags: always
 
       - name: find IPs of OpenDaylight and OpenStack nodes
         shell: |
