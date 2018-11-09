@@ -348,6 +348,7 @@
             source {{ overcloudrc }}
             STACK_HOME=~stack
             robot_cmd="pybot \
+                          -N openstack \
                           --removekeywords wuks \
                           --xunit robotxunit.xml \
                           -c critical \
