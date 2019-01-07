@@ -14,6 +14,7 @@ subparsers:
                           Example:
                               --tests /home/opnfv/repos/odl_test/csit/suites/natapp/basic,/home/opnfv/repos/odl_test/csit/suites/openstack/connectivity/l2.robot
                       required: yes
+
             - title: Robot docker container name
               options:
                   container-image-name:
@@ -21,6 +22,7 @@ subparsers:
                       help: |
                           Name of the container image to use to run Robot in.
                       default: opnfv/cperf:latest
+
             - title: ODL authentication
               options:
                   opendaylight-username:
@@ -48,6 +50,14 @@ subparsers:
                           NOTE: It may need to be overriden with 'karaf.*root.*'
                           for certain versions, i.e.: OSP13 GA/odlparent 3.1.0.
                       default: 'opendaylight-user.*root.*>'
+
+            - title: ODL release
+              options:
+                  opendaylight_release:
+                      type: Value
+                      help: Name of the OpenDaylight release, i.e.: fluorine.
+                      NOTE: if value of this parameters is not specified then it defaults to one from vars.yml
+
             - title: Deployment environment
               options:
                   deployment-environment:

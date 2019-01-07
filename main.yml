@@ -370,7 +370,7 @@
                           -v NUM_TOOLS_SYSTEM:0 \
                           -v OPENSTACK_TOPO:0cmb-1ctl-2cmp \
                           -v ODL_SNAT_MODE:conntrack \
-                          -v ODL_STREAM:{{ osp_version[test.osp.version | int].opendaylight_release }} \
+                          -v ODL_STREAM:{{ test.opendaylight_release | default(osp_version[test.osp.version | int].opendaylight_release }}) \
                           -v OS_CONTROL_NODE_IP:$ODL_IP \
                           -v OS_CONTROL_NODE_1_IP:$OPENSTACK_CONTROL_NODE_1_IP \
                           -v OS_CONTROL_NODE_2_IP:$OPENSTACK_CONTROL_NODE_2_IP \
