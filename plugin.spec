@@ -55,7 +55,7 @@ subparsers:
               options:
                   opendaylight_release:
                       type: Value
-                      help: Name of the OpenDaylight release, i.e.: fluorine.
+                      help: "Name of the OpenDaylight release, i.e.: fluorine."
                       NOTE: if value of this parameters is not specified then it defaults to one from vars.yml
 
             - title: Deployment environment
