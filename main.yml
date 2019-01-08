@@ -263,11 +263,11 @@
         shell: |
             source {{ overcloudrc }}
             if ! openstack image list | grep cirros-0.3.4-x86_64-uec; then
-              curl -o /tmp/cirros3.4.img http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+              curl -4 -o /tmp/cirros3.4.img http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
               glance image-create --name cirros-0.3.4-x86_64-uec --disk-format=qcow2 --container-format=bare --visibility=public --file=/tmp/cirros3.4.img
             fi
             if ! openstack image list | grep cirros-0.3.5-x86_64-disk; then
-              curl -o /tmp/cirros3.5.img http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
+              curl -4 -o /tmp/cirros3.5.img http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
               glance image-create --name cirros-0.3.5-x86_64-disk --disk-format=qcow2 --container-format=bare --visibility=public --file=/tmp/cirros3.5.img
             fi
             if ! openstack flavor list | grep m1.nano; then
@@ -286,6 +286,13 @@
             path: "{{ overcloudrc }}"
             regexp: "OS_VOLUME_API_VERSION=.*"
             replace: "OS_VOLUME_API_VERSION=2"
+
+      - name: add OS_CACERT variable to overcloudrc to avoid 'certificate verify failed' errors in TLS jobs
+        lineinfile:
+          path: "{{ overcloudrc }}"
+          line: "export OS_CACERT=/etc/ssl/certs/ca-bundle.crt"
+          state: present
+          insertafter: EOF
 
       - name: copy overcloudrc file to controller node and more tweaks
         shell: |
@@ -414,6 +421,8 @@
                                      -v /home/stack/.ssh:/home/stack/.ssh:Z \
                                      -v $STACK_HOME:$STACK_HOME \
                                      -v {{ overcloudrc }}:{{ overcloudrc }} \
+                                     -v /etc/ssl:/etc/ssl \
+                                     -v /etc/pki:/etc/pki \
                                      {{ test.container.image.name }} \
                           /bin/bash -c "source {{ overcloudrc }}; \
                                         $robot_cmd {{ test.tests.replace(',', ' ') }};" \
